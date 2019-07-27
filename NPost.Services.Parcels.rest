@@ -1,0 +1,21 @@
+@url = http://localhost:5002
+@parcelId = 00000000-0000-0000-0000-000000000000
+
+###
+GET {{url}}/parcels?size=normal&status=new
+
+###
+GET {{url}}/parcels/{{parcelId}}
+
+###
+POST {{url}}/parcels
+Content-Type: application/json
+
+{
+  "size": "normal",
+  "name": "Parcel #1",
+  "address": "Street 1"
+}
+
+###
+DELETE {{url}}/parcels/{{parcelId}}
