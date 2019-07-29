@@ -33,7 +33,7 @@ namespace NPost.Services.Parcels.Infrastructure
                 .AddHttpClient()
                 .AddConsul()
                 .AddFabio()
-                .AddRabbitMq()
+                .AddRabbitMq<CorrelationContext>()
                 .AddMongo()
                 .AddSwaggerDocs()
                 .AddWebApiSwaggerDocs();
