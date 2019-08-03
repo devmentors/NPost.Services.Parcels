@@ -1,3 +1,4 @@
+using System.Linq;
 using Convey;
 using Convey.CQRS.Queries;
 using Convey.Discovery.Consul;
@@ -11,11 +12,15 @@ using Convey.WebApi;
 using Convey.WebApi.CQRS;
 using Convey.WebApi.Swagger;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using NPost.Services.Parcels.Application;
 using NPost.Services.Parcels.Application.Events.External;
 using NPost.Services.Parcels.Core.Repositories;
+using NPost.Services.Parcels.Infrastructure.Contexts;
 using NPost.Services.Parcels.Infrastructure.Mongo.Repositories;
+using NPost.Services.Parcels.Infrastructure.Services;
 
 namespace NPost.Services.Parcels.Infrastructure
 {
@@ -26,6 +31,8 @@ namespace NPost.Services.Parcels.Infrastructure
             builder.Services.AddTransient<IMessageBroker, MessageBroker>();
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             builder.Services.AddTransient<IParcelsRepository, ParcelsMongoRepository>();
+            builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
+            builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
 
             return builder
                 .AddQueryHandlers()
@@ -55,5 +62,10 @@ namespace NPost.Services.Parcels.Infrastructure
 
             return app;
         }
+
+        internal static CorrelationContext GetCorrelationContext(this IHttpContextAccessor accessor)
+            => accessor.HttpContext.Request.Headers.TryGetValue("Correlation-Context", out var json)
+                ? JsonConvert.DeserializeObject<CorrelationContext>(json.FirstOrDefault())
+                : null;
     }
 }

@@ -1,19 +1,23 @@
 using System.Threading.Tasks;
 using Convey.CQRS.Events;
 using Convey.MessageBrokers;
+using Microsoft.AspNetCore.Http;
 using NPost.Services.Parcels.Application;
 
-namespace NPost.Services.Parcels.Infrastructure
+namespace NPost.Services.Parcels.Infrastructure.Services
 {
-    public class MessageBroker : IMessageBroker
+    internal sealed class MessageBroker : IMessageBroker
     {
         private readonly IBusPublisher _busPublisher;
         private readonly ICorrelationContextAccessor _contextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MessageBroker(IBusPublisher busPublisher, ICorrelationContextAccessor contextAccessor)
+        public MessageBroker(IBusPublisher busPublisher, ICorrelationContextAccessor contextAccessor,
+            IHttpContextAccessor httpContextAccessor)
         {
             _busPublisher = busPublisher;
             _contextAccessor = contextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task PublishAsync(params IEvent[] events)
@@ -30,7 +34,8 @@ namespace NPost.Services.Parcels.Infrastructure
                     continue;
                 }
 
-                await _busPublisher.PublishAsync(@event, _contextAccessor.CorrelationContext);
+                await _busPublisher.PublishAsync(@event, _contextAccessor.CorrelationContext ??
+                                                         _httpContextAccessor.GetCorrelationContext());
             }
         }
     }

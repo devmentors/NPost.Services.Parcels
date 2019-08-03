@@ -9,11 +9,13 @@ namespace NPost.Services.Parcels.Application.Events.External.Handlers
     public class DeliveryFailedHandler : IEventHandler<DeliveryFailed>
     {
         private readonly IParcelsRepository _parcelsRepository;
+        private readonly IAppContext _appContext;
         private readonly ILogger<DeliveryFailedHandler> _logger;
 
-        public DeliveryFailedHandler(IParcelsRepository parcelsRepository, ILogger<DeliveryFailedHandler> logger)
+        public DeliveryFailedHandler(IParcelsRepository parcelsRepository, IAppContext appContext, ILogger<DeliveryFailedHandler> logger)
         {
             _parcelsRepository = parcelsRepository;
+            _appContext = appContext;
             _logger = logger;
         }
 

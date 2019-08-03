@@ -9,11 +9,13 @@ namespace NPost.Services.Parcels.Application.Events.External.Handlers
     public class DeliveryCompletedHandler : IEventHandler<DeliveryCompleted>
     {
         private readonly IParcelsRepository _parcelsRepository;
+        private readonly IAppContext _appContext;
         private readonly ILogger<DeliveryCompletedHandler> _logger;
 
-        public DeliveryCompletedHandler(IParcelsRepository parcelsRepository, ILogger<DeliveryCompletedHandler> logger)
+        public DeliveryCompletedHandler(IParcelsRepository parcelsRepository, IAppContext appContext, ILogger<DeliveryCompletedHandler> logger)
         {
             _parcelsRepository = parcelsRepository;
+            _appContext = appContext;
             _logger = logger;
         }
 
