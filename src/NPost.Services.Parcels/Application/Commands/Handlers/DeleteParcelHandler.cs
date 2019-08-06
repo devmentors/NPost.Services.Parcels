@@ -12,15 +12,13 @@ namespace NPost.Services.Parcels.Application.Commands.Handlers
     {
         private readonly IParcelsRepository _parcelsRepository;
         private readonly IMessageBroker _messageBroker;
-        private readonly IAppContext _appContext;
         private readonly ILogger<DeleteParcelHandler> _logger;
 
         public DeleteParcelHandler(IParcelsRepository parcelsRepository, IMessageBroker messageBroker,
-            IAppContext appContext, ILogger<DeleteParcelHandler> logger)
+            ILogger<DeleteParcelHandler> logger)
         {
             _parcelsRepository = parcelsRepository;
             _messageBroker = messageBroker;
-            _appContext = appContext;
             _logger = logger;
         }
 
